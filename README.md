@@ -1,7 +1,6 @@
 Pensou por um segundo
 
 
-````markdown
 # QR Code Generator GUI
 
 Transforma qualquer link em QR Code (PNG transparente ou SVG) com uma interface gráfica simples em Tkinter — sem dor de cabeça, só clicar e gerar.
