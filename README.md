@@ -68,7 +68,7 @@ pip install svgwrite
 
 Já inclui um `.exe` pronto para usar:
 
-1. Baixe `qrcodeGenerator.exe` na pasta `dist/`.
+1. Baixe `qrcodeGenerator.exe`.
 2. Clique duas vezes e use a GUI normalmente.
 
 ---
