@@ -5,10 +5,8 @@ import webbrowser
 
 def gerar_qrcode(link, caminho_arquivo, formato, incluir_logo, caminho_logo):
     import qrcode
-    import cairosvg
     from qrcode.image.svg import SvgImage
     from PIL import Image, ImageDraw
-    from io import BytesIO
 
     if formato == 'PNG':
         qr = qrcode.QRCode(version=1, box_size=10, border=4)
@@ -64,7 +62,7 @@ def selecionar_logo():
 
 def abrir_logo(caminho_logo):
     import cairosvg
-    from PIL import Image, ImageDraw
+    from PIL import Image
     from io import BytesIO
 
     extens = os.path.splitext(caminho_logo)[1].lower()
