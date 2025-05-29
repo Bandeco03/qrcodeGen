@@ -68,8 +68,9 @@ pip install svgwrite
 
 Já inclui um `.exe` pronto para usar:
 
-1. Baixe `qrcodeGenerator.exe`.
-2. Clique duas vezes e use a GUI normalmente.
+1. Acesse a aba [releases](https://github.com/Bandeco03/qrcodeGen/releases).
+2. Baixe `qrcodeGenerator.exe` em sua última versão disponível.
+3. Clique duas vezes e use a GUI normalmente.
 
 ---
 
