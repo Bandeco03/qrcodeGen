@@ -3,6 +3,7 @@ import os
 import webbrowser
 
 
+
 def gerar_qrcode(link, caminho_arquivo, formato, incluir_logo, caminho_logo):
     import qrcode
     from qrcode.image.svg import SvgImage
@@ -16,7 +17,7 @@ def gerar_qrcode(link, caminho_arquivo, formato, incluir_logo, caminho_logo):
 
         if incluir_logo and caminho_logo:
             try:
-                logo = abrir_logo(caminho_logo)
+                logo = Image.open(caminho_logo).convert("RGBA")
                 basewidth = img.size[0] // 4
                 wpercent = (basewidth / float(logo.size[0]))
                 hsize = int((float(logo.size[1]) * float(wpercent)))
@@ -56,27 +57,9 @@ def selecionar_pasta():
 
 
 def selecionar_logo():
-    arquivo = filedialog.askopenfilename(filetypes=[("Imagens", "*.png;*.jpg;*.jpeg;*.svg")])
+    arquivo = filedialog.askopenfilename(filetypes=[("Imagens", "*.png;*.jpg;*.jpeg")])
     if arquivo:
         logo_var.set(arquivo)
-
-def abrir_logo(caminho_logo):
-    import cairosvg
-    from PIL import Image
-    from io import BytesIO
-
-    extens = os.path.splitext(caminho_logo)[1].lower()
-
-    if extens == ".svg":
-        png_data = cairosvg.svg2png(url=caminho_logo)
-        logo = Image.open(BytesIO(png_data)).convert("RGBA")
-        return logo
-
-    elif extens in [".png", ".jpg", ".jpeg"]:
-        return Image.open(caminho_logo).convert("RGBA")
-
-    else:
-        raise ValueError("Formato de logo não suportado")
 
 def toggle_logo():
     if incluir_logo_var.get():
@@ -130,7 +113,7 @@ Entry(app, textvariable=nome_arquivo_var, width=50).pack()
 Button(app, text="Escolher pasta de destino", command=selecionar_pasta).pack()
 Entry(app, textvariable=caminho_var, width=50).pack()
 
-Checkbutton(app, text="Incluir logo no QR (PNG, JPEG, JPG ou SVG)", variable=incluir_logo_var, command=toggle_logo).pack()
+Checkbutton(app, text="Incluir logo no QR (PNG, JPEG ou JPG)", variable=incluir_logo_var, command=toggle_logo).pack()
 
 botao_logo = Button(app, text="Selecionar logo", command=selecionar_logo, state=DISABLED)
 botao_logo.pack()
