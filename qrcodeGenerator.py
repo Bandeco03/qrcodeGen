@@ -4,24 +4,24 @@ import webbrowser
 
 
 
-def gerar_qrcode(link, caminho_arquivo, formato, incluir_logo, caminho_logo):
+def generate_qrcode(link, doc_path, save_format, include_logo, logo_path):
     import qrcode
     from qrcode.image.svg import SvgImage
     from PIL import Image, ImageDraw
 
-    if formato == 'PNG':
+    if save_format == 'PNG':
         qr = qrcode.QRCode(version=1, box_size=10, border=4)
         qr.add_data(link)
         qr.make(fit=True)
         img = qr.make_image(fill_color="black", back_color="transparent").convert("RGBA")
 
-        if incluir_logo and caminho_logo:
+        if include_logo and logo_path:
             try:
-                logo = Image.open(caminho_logo).convert("RGBA")
-                basewidth = img.size[0] // 4
-                wpercent = (basewidth / float(logo.size[0]))
-                hsize = int((float(logo.size[1]) * float(wpercent)))
-                logo = logo.resize((basewidth, hsize), Image.LANCZOS)
+                logo = Image.open(logo_path).convert("RGBA")
+                base_width = img.size[0] // 4
+                w_percent = (base_width / float(logo.size[0]))
+                hsize = int((float(logo.size[1]) * float(w_percent)))
+                logo = logo.resize((base_width, hsize), Image.LANCZOS)
 
                 pos = ((img.size[0] - logo.size[0]) // 2, (img.size[1] - logo.size[1]) // 2)
 
@@ -41,90 +41,90 @@ def gerar_qrcode(link, caminho_arquivo, formato, incluir_logo, caminho_logo):
             except Exception as e:
                 messagebox.showwarning("Erro na logo", f"Erro ao adicionar logo: {e}")
 
-        img.save(caminho_arquivo)
+        img.save(doc_path)
 
-    elif formato == 'SVG':
+    elif save_format == 'SVG':
         qr = qrcode.make(link, image_factory=SvgImage)
-        qr.save(caminho_arquivo)
+        qr.save(doc_path)
 
-    messagebox.showinfo("Sucesso", f"QR Code salvo em:\n{caminho_arquivo}")
-
-
-def selecionar_pasta():
-    pasta = filedialog.askdirectory()
-    if pasta:
-        caminho_var.set(pasta)
+    messagebox.showinfo("Sucesso", f"QR Code salvo em:\n{doc_path}")
 
 
-def selecionar_logo():
-    arquivo = filedialog.askopenfilename(filetypes=[("Imagens", "*.png;*.jpg;*.jpeg")])
-    if arquivo:
-        logo_var.set(arquivo)
+def select_folder():
+    file = filedialog.askdirectory()
+    if file:
+        path_var.set(file)
+
+
+def select_logo_file():
+    arc = filedialog.askopenfilename(filetypes=[("Imagens", "*.png;*.jpg;*.jpeg")])
+    if arc:
+        logo_path_var.set(arc)
 
 def toggle_logo():
-    if incluir_logo_var.get():
-        botao_logo.config(state=NORMAL)
+    if include_logo_flag.get():
+        logo_btn.config(state=NORMAL)
     else:
-        botao_logo.config(state=DISABLED)
-        logo_var.set("")
+        logo_btn.config(state=DISABLED)
+        logo_path_var.set("")
 
 
-def gerar():
+def generate():
     link = link_var.get()
-    pasta = caminho_var.get()
-    nome = nome_arquivo_var.get()
-    formato = formato_var.get()
-    incluir_logo = incluir_logo_var.get()
-    caminho_logo = logo_var.get()
+    file = path_var.get()
+    name = filename_var.get()
+    save_format = save_format_var.get()
+    include_logo = include_logo_flag.get()
+    logo_path = logo_path_var.get()
 
-    if not link or not pasta or not nome:
+    if not link or not file or not name:
         messagebox.showerror("Erro", "Preencha todos os campos.")
         return
 
-    if incluir_logo and not caminho_logo and formato == "PNG":
+    if include_logo and not logo_path and save_format == "PNG":
         messagebox.showerror("Erro", "Selecione o arquivo da logo.")
         return
 
-    caminho_arquivo = os.path.join(pasta, f"{nome}.{formato.lower()}")
-    gerar_qrcode(link, caminho_arquivo, formato, incluir_logo, caminho_logo)
+    doc_path = os.path.join(file, f"{name}.{save_format.lower()}")
+    generate_qrcode(link, doc_path, save_format, include_logo, logo_path)
 
 
 # GUI
-app = Tk()
-app.title("Gerador de QR Code")
-app.geometry("420x300")
+window = Tk()
+window.title("Gerador de QR Code")
+window.geometry("420x300")
 
 link_var = StringVar()
-caminho_var = StringVar()
-nome_arquivo_var = StringVar()
-formato_var = StringVar(value="PNG")
-logo_var = StringVar()
-incluir_logo_var = IntVar()
+path_var = StringVar()
+filename_var = StringVar()
+save_format_var = StringVar(value="PNG")
+logo_path_var = StringVar()
+include_logo_flag = IntVar()
 
-Label(app, text="Link:").pack()
-Entry(app, textvariable=link_var, width=50).pack()
+Label(window, text="Link:").pack()
+Entry(window, textvariable=link_var, width=50).pack()
 
-Label(app, text="Formato:").pack()
-OptionMenu(app, formato_var, "PNG", "SVG").pack()
+Label(window, text="Formato:").pack()
+OptionMenu(window, save_format_var, "PNG", "SVG").pack()
 
-Label(app, text="Nome do arquivo (sem extensão):").pack()
-Entry(app, textvariable=nome_arquivo_var, width=50).pack()
+Label(window, text="Nome do arquivo (sem extensão):").pack()
+Entry(window, textvariable=filename_var, width=50).pack()
 
-Button(app, text="Escolher pasta de destino", command=selecionar_pasta).pack()
-Entry(app, textvariable=caminho_var, width=50).pack()
+Button(window, text="Escolher local de destino", command=select_folder).pack()
+Entry(window, textvariable=path_var, width=50).pack()
 
-Checkbutton(app, text="Incluir logo no QR (PNG, JPEG ou JPG)", variable=incluir_logo_var, command=toggle_logo).pack()
+Checkbutton(window, text="Incluir logo no QR (PNG, JPEG ou JPG)", variable=include_logo_flag, command=toggle_logo).pack()
 
-botao_logo = Button(app, text="Selecionar logo", command=selecionar_logo, state=DISABLED)
-botao_logo.pack()
+logo_btn = Button(window, text="Selecionar logo", command=select_logo_file, state=DISABLED)
+logo_btn.pack()
 
-Entry(app, textvariable=logo_var, width=50, state="readonly").pack()
+Entry(window, textvariable=logo_path_var, width=50, state="readonly").pack()
 
-Button(app, text="Gerar QR Code", command=gerar).pack(pady=10)
+Button(window, text="Gerar QR Code", command=generate).pack(pady=10)
 
-sign_label = Label(app, text="Desenvolvido por Rafael Bandini", font=("Arial", 8, "italic"), fg="blue", cursor="hand2")
+sign_label = Label(window, text="Desenvolvido por Rafael Bandini", font=("Arial", 8, "italic"), fg="blue", cursor="hand2")
 
 sign_label.place(relx=1.0, rely=1.0, anchor="se")
 sign_label.bind("<Button-1>", lambda e: webbrowser.open_new("https://www.linkedin.com/in/rafael-bandini/"))
 
-app.mainloop()
+window.mainloop()
